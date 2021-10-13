@@ -108,25 +108,29 @@ function init() {
                     console.log(results);
                 });
             } else if (data.choice === "add a department") {
-                
+                inquirer
+                    .prompt(addDepartmentQ)
             } else if (data.choice === "view all employees") {
                 // Query database
                 db.query('SELECT * FROM employee', function (err, results) {
                     console.log(results);
                 });
             } else if (data.choice === "add a employee") {
-
+                inquirer
+                    .prompt(addEmployeeQ)
             } else if (data.choice === "update a employee role") {
-
+                inquirer
+                    .prompt(updateEmployee)
             } else if (data.choice === "view all roles") {
                 // Query database
                 db.query('SELECT * FROM role', function (err, results) {
                     console.log(results);
                 });
             } else if (data.choice === "add a role") {
-
+                inquirer
+                    .prompt(addRoleQ)
             } else if (data.choice === "Quit") {
-
+                
             }
         })
 }
