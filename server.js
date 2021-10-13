@@ -19,9 +19,9 @@ const starterQ = [
         type: 'list',
         message: 'What would you like to do?',
         choices: ['view all department', 'add a department',
-        'view all employees','add an employee','update an employee role',
-        'view all roles', 'add a role',
-        'Quit'],
+            'view all employees', 'add an employee', 'update an employee role',
+            'view all roles', 'add a role',
+            'Quit'],
         name: 'choice',
     },
 ];
@@ -83,17 +83,54 @@ const addRoleQ = [
 
 const updateEmployee = [
     {
-        type:'list',
+        type: 'list',
         message: 'Which employees role do you want to update?',
         //Get employees names from database
-        choices:[''],
+        choices: [''],
         name: 'updateName'
     },
     {
-        type:'list',
+        type: 'list',
         message: 'Which role do you wnat to assign the selected employee?',
         //Get employess role from database
-        choices:[''],
+        choices: [''],
         name: 'updateRole'
     }
 ]
+
+function init() {
+    inquirer
+        .prompt(starterQ)
+        .then((data) => {
+            if (data.choice === "view all department") {
+                // Query database
+                db.query('SELECT * FROM department', function (err, results) {
+                    console.log(results);
+                });
+            } else if (data.choice === "add a department") {
+                
+            } else if (data.choice === "view all employees") {
+                // Query database
+                db.query('SELECT * FROM employee', function (err, results) {
+                    console.log(results);
+                });
+            } else if (data.choice === "add a employee") {
+
+            } else if (data.choice === "update a employee role") {
+
+            } else if (data.choice === "view all roles") {
+                // Query database
+                db.query('SELECT * FROM role', function (err, results) {
+                    console.log(results);
+                });
+            } else if (data.choice === "add a role") {
+
+            } else if (data.choice === "Quit") {
+
+            }
+        })
+}
+//initializes function init() once
+for (let i = 0; i < 1; i++) {
+    init();
+}
