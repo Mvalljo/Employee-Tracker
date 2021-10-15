@@ -8,7 +8,7 @@ const db = mysql.createConnection(
         // MySQL username,
         user: 'root',
         // MySQL password
-        password: '',
+        password: 'InjusticeGAU12!',
         database: 'employee_tracker_db'
     },
 );
@@ -103,16 +103,18 @@ function init() {
         .then((data) => {
             if (data.choice === "view all department") {
                 // Query database
-                db.query('SELECT * FROM department', function (err, results) {
-                    console.log(results);
+                db.query('SELECT department.name FROM department', function (err, results) {
+                    console.table(results);
+                    init();
                 });
             } else if (data.choice === "add a department") {
                 inquirer
                     .prompt(addDepartmentQ)
             } else if (data.choice === "view all employees") {
                 // Query database
-                db.query('SELECT * FROM employee', function (err, results) {
-                    console.log(results);
+                db.query("SELECT employee.first_name, employee.last_name, role.title, department.name AS department, role.salary, concat(manager.first_name, ' ' ,  manager.last_name) AS manager FROM employee LEFT JOIN employee manager ON employee.manager_id = manager.id INNER JOIN role ON employee.role_id = role.id INNER JOIN department ON role.department_id = department.id;", function (err, results) {
+                    console.table(results);
+                    init();
                 });
             } else if (data.choice === "add a employee") {
                 inquirer
@@ -122,14 +124,16 @@ function init() {
                     .prompt(updateEmployee)
             } else if (data.choice === "view all roles") {
                 // Query database
-                db.query('SELECT * FROM role', function (err, results) {
-                    console.log(results);
+                db.query("SELECT role.title, department.name as department, role.salary FROM role JOIN department ON role.department_id = department.id;", function (err, results) {
+                    console.table(results);
+                    init();
                 });
             } else if (data.choice === "add a role") {
                 inquirer
                     .prompt(addRoleQ)
             } else if (data.choice === "Quit") {
-                
+                console.log("\nGoodbye!");
+                process.exit(0);
             }
         })
 }
