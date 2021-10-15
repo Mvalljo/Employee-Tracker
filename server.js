@@ -11,7 +11,6 @@ const db = mysql.createConnection(
         password: '',
         database: 'employeeTracker_db'
     },
-    console.log(`Connected to the classlist_db database.`)
 );
 
 const starterQ = [
