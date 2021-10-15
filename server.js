@@ -32,11 +32,21 @@ const addDepartmentQ = [
         name: 'departmentName',
     }
 ]
+
 //Gets roles and puts it in a array
-const employeeRole = new Array;
+const emplRole = new Array;
 db.query('SELECT role.title FROM role', function (err, results) {
     for (let i = 0; i < results.length; i++) {
-        employeeRole.push(results[i].title);    
+        emplRole.push(results[i].title);    
+    }
+});
+//Gets managers and puts it in a array
+const emplMang = new Array;
+db.query("SELECT concat(manager.first_name, ' ' ,  manager.last_name) AS manager FROM employee LEFT JOIN employee manager ON employee.manager_id = manager.id INNER JOIN role ON employee.role_id = role.id;", function (err, results) {
+    for (let i = 0; i < results.length; i++) {
+        if (results[i].manager !== null) {
+         emplMang.push(results[i].manager);   
+        }
     }
 });
 //Array of questions to add an employee
@@ -55,14 +65,14 @@ const addEmployeeQ = [
         type: 'list',
         message: 'What is the employees role?',
         //Get roles from database
-        choices: test,
+        choices: emplRole,
         name: 'employeeRole',
     },
     {
         type: 'list',
         message: 'What is the employees manager?',
         //Get managers name from database
-        choices: test,
+        choices: emplMang,
         name: 'employeeManager',
     }
 ]
