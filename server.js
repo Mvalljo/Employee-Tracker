@@ -8,7 +8,7 @@ const db = mysql.createConnection(
         // MySQL username,
         user: 'root',
         // MySQL password
-        password: 'InjusticeGAU12!',
+        password: '',
         database: 'employee_tracker_db'
     },
 );
@@ -32,7 +32,14 @@ const addDepartmentQ = [
         name: 'departmentName',
     }
 ]
-
+//Gets roles and puts it in a array
+const employeeRole = new Array;
+db.query('SELECT role.title FROM role', function (err, results) {
+    for (let i = 0; i < results.length; i++) {
+        employeeRole.push(results[i].title);    
+    }
+});
+//Array of questions to add an employee
 const addEmployeeQ = [
     {
         type: 'input',
@@ -48,14 +55,14 @@ const addEmployeeQ = [
         type: 'list',
         message: 'What is the employees role?',
         //Get roles from database
-        choices: [''],
+        choices: test,
         name: 'employeeRole',
     },
     {
         type: 'list',
         message: 'What is the employees manager?',
         //Get managers name from database
-        choices: [''],
+        choices: test,
         name: 'employeeManager',
     }
 ]
@@ -116,9 +123,13 @@ function init() {
                     console.table(results);
                     init();
                 });
-            } else if (data.choice === "add a employee") {
+            } else if (data.choice === "add an employee") {
                 inquirer
                     .prompt(addEmployeeQ)
+                    .then((data)=> {
+                        console.log(data);
+                        init();
+                    })
             } else if (data.choice === "update a employee role") {
                 inquirer
                     .prompt(updateEmployee)
