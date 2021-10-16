@@ -152,7 +152,7 @@ function init() {
                         console.log(data);
                         init();
                     })
-            } else if (data.choice === "update a employee role") {
+            } else if (data.choice === "update an employee role") {
                 inquirer
                     .prompt(updateEmployee)
                     .then((data)=> {
