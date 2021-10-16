@@ -105,12 +105,20 @@ const addRoleQ = [
     }
 ]
 
+//Gets employee's name and puts it in a array
+const emplNames = new Array;
+db.query("SELECT concat(employee.first_name, ' ' ,  employee.last_name) AS employee FROM employee", function (err, results) {
+    for (let i = 0; i < results.length; i++) {
+         emplNames.push(results[i].employee);   
+    }
+});
+//Array of questions to update an employee
 const updateEmployee = [
     {
         type: 'list',
         message: 'Which employees role do you want to update?',
         //Get employees names from database
-        choices: [''],
+        choices: emplNames,
         name: 'updateName'
     },
     {
