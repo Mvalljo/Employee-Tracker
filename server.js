@@ -117,7 +117,7 @@ const updateEmployee = [
         type: 'list',
         message: 'Which role do you wnat to assign the selected employee?',
         //Get employess role from database
-        choices: [''],
+        choices: emplRole,
         name: 'updateRole'
     }
 ]
@@ -135,6 +135,10 @@ function init() {
             } else if (data.choice === "add a department") {
                 inquirer
                     .prompt(addDepartmentQ)
+                    .then((data)=> {
+                        console.log(data);
+                        init();
+                    })
             } else if (data.choice === "view all employees") {
                 // Query database
                 db.query("SELECT employee.first_name, employee.last_name, role.title, department.name AS department, role.salary, concat(manager.first_name, ' ' ,  manager.last_name) AS manager FROM employee LEFT JOIN employee manager ON employee.manager_id = manager.id INNER JOIN role ON employee.role_id = role.id INNER JOIN department ON role.department_id = department.id;", function (err, results) {
