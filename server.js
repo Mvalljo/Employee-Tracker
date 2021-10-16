@@ -77,6 +77,14 @@ const addEmployeeQ = [
     }
 ]
 
+//Gets department names and puts it in a array
+const dept = new Array;
+db.query('SELECT department.name FROM department', function (err, results) {
+    for (let i = 0; i < results.length; i++) {
+        dept.push(results[i].name);    
+    }
+});
+//Array of questions to add a role
 const addRoleQ = [
     {
         type: 'input',
@@ -92,7 +100,7 @@ const addRoleQ = [
         type: 'list',
         message: 'Which department does the role belong to?',
         //Get departments from database
-        choices: [''],
+        choices: dept,
         name: 'roleDepartment'
     }
 ]
@@ -143,6 +151,10 @@ function init() {
             } else if (data.choice === "update a employee role") {
                 inquirer
                     .prompt(updateEmployee)
+                    .then((data)=> {
+                        console.log(data);
+                        init();
+                    })
             } else if (data.choice === "view all roles") {
                 // Query database
                 db.query("SELECT role.title, department.name as department, role.salary FROM role JOIN department ON role.department_id = department.id;", function (err, results) {
@@ -152,6 +164,10 @@ function init() {
             } else if (data.choice === "add a role") {
                 inquirer
                     .prompt(addRoleQ)
+                    .then((data)=> {
+                        console.log(data);
+                        init();
+                    })
             } else if (data.choice === "Quit") {
                 console.log("\nGoodbye!");
                 process.exit(0);
