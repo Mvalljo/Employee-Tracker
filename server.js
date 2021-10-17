@@ -165,8 +165,37 @@ function init() {
                 inquirer
                     .prompt(addEmployeeQ)
                     .then((data) => {
-                        console.log(data);
-                        init();
+                        db.query("SELECT * FROM role;", function (err, results) {
+                            //Searches for the role name that matches the answer given to get the role id
+                            let empR;
+                            for (let d = 0; d < results.length; d++) {
+                                if (results[d].title === data.employeeRole) {
+                                    empR = results[d].id;
+                                }
+                            }
+                            db.query("SELECT id, concat(employee.first_name, ' ' ,  employee.last_name) AS employee FROM employee;", function (err, results) {
+                                console.log(results);
+                                //Searches for the manager name that matches the answer given to get the manager id
+                                let empM;
+                                for (let m = 0; m < results.length; m++) {
+                                    if (results[m].employee === data.employeeManager) {
+                                        empM = results[m].id;
+                                    } else if (data.employeeManager === "None") {
+                                        empM = "NULL";
+                                    }
+                                }
+                                //adds a new employee to the database
+                                db.query(`INSERT INTO employee (first_name,last_name,role_id,manager_id) VALUES ("${data.employeeFirstName}","${data.employeeLastName}",${empR},${empM});`, (err, results) => {
+                                    if (err) {
+                                        console.log('error:', err.message);
+                                    } else {
+                                        console.log("Added " + data.employeeFirstName + " " + data.employeeLastName +" to the database.");
+                                    }
+                                    init();
+                                    return results;
+                                });
+                            });
+                        });
                     })
             } else if (data.choice === "update an employee role") {
                 inquirer
