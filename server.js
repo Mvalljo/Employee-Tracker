@@ -189,7 +189,7 @@ function init() {
                                     if (err) {
                                         console.log('error:', err.message);
                                     } else {
-                                        console.log("Added " + data.employeeFirstName + " " + data.employeeLastName +" to the database.");
+                                        console.log("Added " + data.employeeFirstName + " " + data.employeeLastName + " to the database.");
                                     }
                                     init();
                                     return results;
@@ -201,8 +201,34 @@ function init() {
                 inquirer
                     .prompt(updateEmployee)
                     .then((data) => {
-                        console.log(data);
-                        init();
+                        db.query("SELECT id, concat(employee.first_name, ' ' ,  employee.last_name) AS employee FROM employee;", function (err, results) {
+                            //Searches for the employee name that matches the answer given to get the employee id
+                            let empId;
+                            for (let u = 0; u < results.length; u++) {
+                                if (results[u].employee === data.updateName) {
+                                    empId = results[u].id;
+                                }
+                            }
+                            db.query("SELECT role.id, role.title FROM role;", function (err, results) {
+                                //Searches for the role name that matches the answer given to get the role id
+                                let empR;
+                                for (let u = 0; u < results.length; u++) {
+                                    if (results[u].title === data.updateRole) {
+                                        empR = results[u].id;
+                                    }
+                                }
+                                //updates an employee's role to the database
+                                db.query(`UPDATE employee SET role_id = ${empR} WHERE employee.id = ${empId};`, (err, results) => {
+                                    if (err) {
+                                        console.log('error:', err.message);
+                                    } else {
+                                        console.log("Updated " + data.updateName +" role.");
+                                    }
+                                    init();
+                                    return results;
+                                });
+                            });
+                        });
                     })
             } else if (data.choice === "view all roles") {
                 // Query database
