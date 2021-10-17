@@ -185,8 +185,26 @@ function init() {
                 inquirer
                     .prompt(addRoleQ)
                     .then((data) => {
-                        console.log(data);
-                        init();
+                        db.query("SELECT * FROM Department;", function (err, results) {
+                            //Searches for the department name that matches the answer given to get the department id
+                            let roleDept;
+                            for (let r = 0; r < results.length; r++) {
+                                if (results[r].name === data.roleDepartment) {
+                                    roleDept = results[r].id;
+                                }
+                            }
+                            //adds a new role to the database
+                            db.query(`INSERT INTO role (title,salary,department_id) VALUES ("${data.roleName}","${data.roleSalary}",${roleDept});`, (err, results) => {
+                                if (err) {
+                                    console.log('error:', err.message);
+                                } else {
+                                    console.log("Added " + data.roleName + " to the database.");
+                                }
+                                init();
+                                return results;
+                            });
+                        });
+
                     })
             } else if (data.choice === "Quit") {
                 console.log("\nGoodbye!");
