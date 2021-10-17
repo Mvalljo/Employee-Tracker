@@ -42,7 +42,7 @@ db.query('SELECT role.title FROM role', function (err, results) {
     }
 });
 //Gets managers and puts it in a array
-const emplMang = new Array;
+const emplMang = ["None"];
 db.query("SELECT concat(manager.first_name, ' ' ,  manager.last_name) AS manager FROM employee LEFT JOIN employee manager ON employee.manager_id = manager.id INNER JOIN role ON employee.role_id = role.id;", function (err, results) {
     for (let i = 0; i < results.length; i++) {
         if (results[i].manager !== null) {
