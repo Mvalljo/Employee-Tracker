@@ -38,7 +38,7 @@ const addDepartmentQ = [
 const emplRole = new Array;
 db.query('SELECT role.title FROM role', function (err, results) {
     for (let i = 0; i < results.length; i++) {
-        emplRole.push(results[i].title);    
+        emplRole.push(results[i].title);
     }
 });
 //Gets managers and puts it in a array
@@ -46,7 +46,7 @@ const emplMang = new Array;
 db.query("SELECT concat(manager.first_name, ' ' ,  manager.last_name) AS manager FROM employee LEFT JOIN employee manager ON employee.manager_id = manager.id INNER JOIN role ON employee.role_id = role.id;", function (err, results) {
     for (let i = 0; i < results.length; i++) {
         if (results[i].manager !== null) {
-         emplMang.push(results[i].manager);   
+            emplMang.push(results[i].manager);
         }
     }
 });
@@ -82,7 +82,7 @@ const addEmployeeQ = [
 const dept = new Array;
 db.query('SELECT department.name FROM department', function (err, results) {
     for (let i = 0; i < results.length; i++) {
-        dept.push(results[i].name);    
+        dept.push(results[i].name);
     }
 });
 //Array of questions to add a role
@@ -110,7 +110,7 @@ const addRoleQ = [
 const emplNames = new Array;
 db.query("SELECT concat(employee.first_name, ' ' ,  employee.last_name) AS employee FROM employee", function (err, results) {
     for (let i = 0; i < results.length; i++) {
-         emplNames.push(results[i].employee);   
+        emplNames.push(results[i].employee);
     }
 });
 //Array of questions to update an employee
@@ -144,9 +144,16 @@ function init() {
             } else if (data.choice === "add a department") {
                 inquirer
                     .prompt(addDepartmentQ)
-                    .then((data)=> {
-                        console.log(data);
-                        init();
+                    .then((data) => {
+                        db.query(`INSERT INTO department (name) VALUES (?);`, data.departmentName, (err, results) => {
+                            if (err) {
+                                console.log('error:', err.message);
+                            } else {
+                                console.log("Added " + data.departmentName + " to the database.");
+                            }
+                            init();
+                            return results;
+                        });
                     })
             } else if (data.choice === "view all employees") {
                 // Query database
@@ -157,14 +164,14 @@ function init() {
             } else if (data.choice === "add an employee") {
                 inquirer
                     .prompt(addEmployeeQ)
-                    .then((data)=> {
+                    .then((data) => {
                         console.log(data);
                         init();
                     })
             } else if (data.choice === "update an employee role") {
                 inquirer
                     .prompt(updateEmployee)
-                    .then((data)=> {
+                    .then((data) => {
                         console.log(data);
                         init();
                     })
@@ -177,7 +184,7 @@ function init() {
             } else if (data.choice === "add a role") {
                 inquirer
                     .prompt(addRoleQ)
-                    .then((data)=> {
+                    .then((data) => {
                         console.log(data);
                         init();
                     })
