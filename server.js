@@ -18,9 +18,9 @@ const starterQ = [
     {
         type: 'list',
         message: 'What would you like to do?',
-        choices: ['view all department', 'add a department',
+        choices: ['view all department', 'add a department', 
             'view all employees', 'add an employee', 'update an employee role', 'update an employees manager',
-            'view employees by manager',
+            'view employees by manager','view employees by department',
             'view all roles', 'add a role',
             'Quit'],
         name: 'choice',
@@ -286,6 +286,16 @@ function init() {
             } else if (data.choice === "view employees by manager") {
                 // Query database
                 db.query("SELECT concat(manager.first_name, ' ' ,  manager.last_name) AS manager, GROUP_CONCAT(employee.first_name,' ',employee.last_name) AS employees FROM employee LEFT JOIN employee manager ON employee.manager_id = manager.id WHERE employee.manager_id!='NULL' GROUP BY manager;", function (err, results) {
+                    if (err) {
+                        console.log('error:', err.message);
+                    } else {
+                        console.table(results);
+                    }
+                    init();
+                });
+            }  else if (data.choice === "view employees by department") {
+                // Query database
+                db.query("SELECT department.name AS department, GROUP_CONCAT(employee.first_name,' ',employee.last_name) AS employees FROM employee INNER JOIN role ON employee.role_id = role.id INNER JOIN department ON role.department_id = department.id GROUP BY department;", function (err, results) {
                     if (err) {
                         console.log('error:', err.message);
                     } else {
