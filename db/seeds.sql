@@ -29,7 +29,7 @@ ORDER BY role.id;
 
 INSERT INTO employee (first_name,last_name,role_id,manager_id)
 VALUES  ("Naruto","Uzumaki",1,null),   
-        ("John","Doe",2,2),
+        ("John","Doe",2,1),
         ("Bruce","Wayne",7,null),
         ("Asami","Sato",8,3),
         ("Kento","Nanami",3,null),
