@@ -19,7 +19,7 @@ const starterQ = [
         type: 'list',
         message: 'What would you like to do?',
         choices: ['view all department', 'add a department',
-            'view all employees', 'add an employee', 'update an employee role',
+            'view all employees', 'add an employee', 'update an employee role', 'update an employees manager',
             'view all roles', 'add a role',
             'Quit'],
         name: 'choice',
@@ -131,6 +131,24 @@ const updateEmployee = [
     }
 ]
 
+//Array of questions to update an employee's manager
+const updateEmployeeM = [
+    {
+        type: 'list',
+        message: "Which employee's manager do you want to update?",
+        //Get employees names from database
+        choices: emplNames,
+        name: 'updateNameM'
+    },
+    {
+        type: 'list',
+        message: 'Which manager do you wnat to assign the selected employee?',
+        //Get employess role from database
+        choices: emplMang,
+        name: 'updateManager'
+    }
+]
+
 function init() {
     inquirer
         .prompt(starterQ)
@@ -230,6 +248,40 @@ function init() {
                             });
                         });
                     })
+            } else if (data.choice === "update an employees manager") {
+                inquirer
+                    .prompt(updateEmployeeM)
+                    .then((data) => {
+                        db.query("SELECT id, concat(employee.first_name, ' ' ,  employee.last_name) AS employee FROM employee;", function (err, results) {
+                            //Searches for the employee name that matches the answer given to get the employee id
+                            let empIdM;
+                            for (let u = 0; u < results.length; u++) {
+                                if (results[u].employee === data.updateNameM) {
+                                    empIdM = results[u].id;
+                                }
+                            }
+                            //Searches for the manager name that matches the answer given to get the manager id
+                            let empMangUpdate;
+                            console.log(data.updateManager)
+                            for (let t = 0; t < results.length; t++) {
+                                if (results[t].employee === data.updateManager) {
+                                    empMangUpdate = results[t].id;
+                                } else if (data.updateManager === "None") {
+                                    empMangUpdate = "NULL";
+                                }
+                            }
+                            //updates an employee's manager to the database
+                            db.query(`UPDATE employee SET manager_id = ${empMangUpdate} WHERE employee.id = ${empIdM};`, (err, results) => {
+                                if (err) {
+                                    console.log('error:', err.message);
+                                } else {
+                                    console.log("Updated " + data.updateNameM + " manager to " + data.updateManager + ".");
+                                }
+                                init();
+                                return results;
+                            });
+                        });
+                    });
             } else if (data.choice === "view all roles") {
                 // Query database
                 db.query("SELECT role.title, department.name as department, role.salary FROM role JOIN department ON role.department_id = department.id;", function (err, results) {
