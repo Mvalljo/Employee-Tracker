@@ -24,6 +24,7 @@ const starterQ = [
             'view employees by manager', 'view employees by department',
             'view all roles', 'add a role',
             'Delete a department', 'Delete a role', 'Delete a employee',
+            'View the total utilized budget of each department',
             'Quit'],
         name: 'choice',
     },
@@ -420,7 +421,18 @@ function init() {
                             });
                         });
                     })
-            } else if (data.choice === "Quit") {
+            } else if (data.choice === "View the total utilized budget of each department") {
+                // Query database
+                db.query("SELECT department.name as department, SUM(role.salary) as budget FROM role RIGHT JOIN department ON role.department_id = department.id GROUP BY department.name;", function (err, results) {
+                    if (err) {
+                        console.log('error:', err.message);
+                    } else {
+                        console.table(results);
+                    }
+                    init();
+                });
+            }
+            else if (data.choice === "Quit") {
                 console.log("\nGoodbye!");
                 process.exit(0);
             }
