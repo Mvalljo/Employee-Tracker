@@ -18,10 +18,12 @@ const starterQ = [
     {
         type: 'list',
         message: 'What would you like to do?',
-        choices: ['view all department', 'add a department', 
-            'view all employees', 'add an employee', 'update an employee role', 'update an employees manager',
-            'view employees by manager','view employees by department',
+        choices: ['view all department', 'add a department',
+            'view all employees', 'add an employee',
+            'update an employee role', 'update an employees manager',
+            'view employees by manager', 'view employees by department',
             'view all roles', 'add a role',
+            'Delete a department', 'Delete a role', 'Delete a employee',
             'Quit'],
         name: 'choice',
     },
@@ -147,6 +149,39 @@ const updateEmployeeM = [
         //Get employess role from database
         choices: emplMang,
         name: 'updateManager'
+    }
+]
+
+//Array of question to choose what department to delete
+const deleteDepartment = [
+    {
+        type: 'list',
+        message: "What department do you want to delete?",
+        //Get employeres names from database
+        choices: dept,
+        name: 'deletedDept'
+    }
+]
+
+//Array of question to choose what role to delete
+const deleteRole = [
+    {
+        type: 'list',
+        message: "What role do you want to delete?",
+        //Get employees names from database
+        choices: emplRole,
+        name: 'deletedRole'
+    }
+]
+
+//Array of question to choose which employee to delete
+const deleteEmployee = [
+    {
+        type: 'list',
+        message: "Which employee do you want to delete?",
+        //Get employees names from database
+        choices: emplNames,
+        name: 'deletedEmpl'
     }
 ]
 
@@ -293,7 +328,7 @@ function init() {
                     }
                     init();
                 });
-            }  else if (data.choice === "view employees by department") {
+            } else if (data.choice === "view employees by department") {
                 // Query database
                 db.query("SELECT department.name AS department, GROUP_CONCAT(employee.first_name,' ',employee.last_name) AS employees FROM employee INNER JOIN role ON employee.role_id = role.id INNER JOIN department ON role.department_id = department.id GROUP BY department;", function (err, results) {
                     if (err) {
@@ -333,6 +368,57 @@ function init() {
                             });
                         });
 
+                    })
+            } else if (data.choice === "Delete a department") {
+                inquirer
+                    .prompt(deleteDepartment)
+                    .then((data) => {
+                        db.query(`DELETE FROM department WHERE name = "?";`, data.deletedDept, (err, results) => {
+                            if (err) {
+                                console.log('error:', err.message);
+                            } else {
+                                console.log("Deleted " + data.deletedDept + " from the database.");
+                            }
+                            init();
+                            return results;
+                        });
+                    })
+            } else if (data.choice === "Delete a role") {
+                inquirer
+                    .prompt(deleteRole)
+                    .then((data) => {
+                        db.query(`DELETE FROM role WHERE title = "?";`, data.deletedRole, (err, results) => {
+                            if (err) {
+                                console.log('error:', err.message);
+                            } else {
+                                console.log("Deleted " + data.deletedRole + " from the database.");
+                            }
+                            init();
+                            return results;
+                        });
+                    })
+            } else if (data.choice === "Delete a employee") {
+                inquirer
+                    .prompt(deleteEmployee)
+                    .then((data) => {
+                        db.query("SELECT id, concat(employee.first_name, ' ' ,  employee.last_name) AS employee FROM employee;", function (err, results) {
+                            //Searches for the employee name that matches the answer given to get the employee id
+                            let empIdD;
+                            for (let w = 0; w < results.length; w++) {
+                                if (results[w].employee === data.deletedEmpl) {
+                                    empIdD = results[w].id;
+                                }
+                            }
+                            db.query(`DELETE FROM employee WHERE id = ?;`, empIdD, (err, results) => {
+                                if (err) {
+                                    console.log('error:', err.message);
+                                } else {
+                                    console.log("Deleted " + data.deletedEmpl + " from the database.");
+                                }
+                                init();
+                                return results;
+                            });
+                        });
                     })
             } else if (data.choice === "Quit") {
                 console.log("\nGoodbye!");
