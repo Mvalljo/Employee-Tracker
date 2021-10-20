@@ -20,7 +20,7 @@ function init() {
         .prompt(questions.starterQ)
         .then((data) => {
             if (data.choice === "View all departments") {
-                // Query database
+                // Shows a table with all the departments listed
                 db.query('SELECT department.name FROM department', function (err, results) {
                     if (err) {
                         console.log('error:', err.message);
@@ -33,6 +33,7 @@ function init() {
                 inquirer
                     .prompt(questions.addDepartmentQ)
                     .then((data) => {
+                        //Adds new department made to database
                         db.query(`INSERT INTO department (name) VALUES (?);`, data.departmentName, (err, results) => {
                             if (err) {
                                 console.log('error:', err.message);
@@ -44,7 +45,7 @@ function init() {
                         });
                     })
             } else if (data.choice === "View all employees") {
-                // Query database
+                // Shows a table with all the employees with their first name, last name, role, department, salary, and manager
                 db.query("SELECT employee.first_name, employee.last_name, role.title, department.name AS department, role.salary, concat(manager.first_name, ' ' ,  manager.last_name) AS manager FROM employee LEFT JOIN employee manager ON employee.manager_id = manager.id INNER JOIN role ON employee.role_id = role.id INNER JOIN department ON role.department_id = department.id;", function (err, results) {
                     if (err) {
                         console.log('error:', err.message);
@@ -157,7 +158,7 @@ function init() {
                         });
                     });
             } else if (data.choice === "View employees by manager") {
-                // Query database
+                // Shows a table with all managers with their employees 
                 db.query("SELECT concat(manager.first_name, ' ' ,  manager.last_name) AS manager, GROUP_CONCAT(employee.first_name,' ',employee.last_name) AS employees FROM employee LEFT JOIN employee manager ON employee.manager_id = manager.id WHERE employee.manager_id!='NULL' GROUP BY manager;", function (err, results) {
                     if (err) {
                         console.log('error:', err.message);
@@ -167,7 +168,7 @@ function init() {
                     init();
                 });
             } else if (data.choice === "View employees by department") {
-                // Query database
+                // Shows a table with all departments with their employees 
                 db.query("SELECT department.name AS department, GROUP_CONCAT(employee.first_name,' ',employee.last_name) AS employees FROM employee INNER JOIN role ON employee.role_id = role.id INNER JOIN department ON role.department_id = department.id GROUP BY department;", function (err, results) {
                     if (err) {
                         console.log('error:', err.message);
@@ -177,7 +178,7 @@ function init() {
                     init();
                 });
             } else if (data.choice === "View all roles") {
-                // Query database
+                // Shows a table with all roles and their department, and salary
                 db.query("SELECT role.title, department.name as department, role.salary FROM role JOIN department ON role.department_id = department.id;", function (err, results) {
                     if (err) {
                         console.log('error:', err.message);
@@ -215,6 +216,7 @@ function init() {
                 inquirer
                     .prompt(questions.deleteDepartment)
                     .then((data) => {
+                        //Deleted a department from database
                         db.query(`DELETE FROM department WHERE name = "?";`, data.deletedDept, (err, results) => {
                             if (err) {
                                 console.log('error:', err.message);
@@ -229,6 +231,7 @@ function init() {
                 inquirer
                     .prompt(questions.deleteRole)
                     .then((data) => {
+                        //Deleted a role from database
                         db.query(`DELETE FROM role WHERE title = "?";`, data.deletedRole, (err, results) => {
                             if (err) {
                                 console.log('error:', err.message);
@@ -263,7 +266,7 @@ function init() {
                         });
                     })
             } else if (data.choice === "View the total utilized budget of each department") {
-                // Query database
+                // Shows a table with each deparmtnets budget from the combined salaries of all employees in that department
                 db.query("SELECT department.name as department, SUM(role.salary) as budget FROM role RIGHT JOIN department ON role.department_id = department.id GROUP BY department.name;", function (err, results) {
                     if (err) {
                         console.log('error:', err.message);
