@@ -46,7 +46,22 @@ function init() {
                     })
             } else if (data.choice === "View all employees") {
                 // Shows a table with all the employees with their first name, last name, role, department, salary, and manager
-                db.query("SELECT employee.first_name, employee.last_name, role.title, department.name AS department, role.salary, concat(manager.first_name, ' ' ,  manager.last_name) AS manager FROM employee LEFT JOIN employee manager ON employee.manager_id = manager.id INNER JOIN role ON employee.role_id = role.id INNER JOIN department ON role.department_id = department.id;", function (err, results) {
+                db.query(`
+                SELECT 
+                    employee.first_name, 
+                    employee.last_name, 
+                    role.title, 
+                    department.name AS department, 
+                    role.salary, 
+                    concat(manager.first_name, ' ' ,  manager.last_name) AS manager 
+                FROM employee 
+                    LEFT JOIN employee manager 
+                    ON employee.manager_id = manager.id 
+                    INNER JOIN role 
+                    ON employee.role_id = role.id 
+                    INNER JOIN department 
+                    ON role.department_id = department.id;
+                `, function (err, results) {
                     if (err) {
                         console.log('error:', err.message);
                     } else {
@@ -66,7 +81,11 @@ function init() {
                                     empR = results[d].id;
                                 }
                             }
-                            db.query("SELECT id, concat(employee.first_name, ' ' ,  employee.last_name) AS employee FROM employee;", function (err, results) {
+                            db.query(`
+                            SELECT 
+                                id, 
+                                concat(employee.first_name, ' ' ,  employee.last_name) AS employee 
+                            FROM employee;`, function (err, results) {
                                 console.log(results);
                                 //Searches for the manager name that matches the answer given to get the manager id
                                 let empM;
@@ -77,8 +96,12 @@ function init() {
                                         empM = "NULL";
                                     }
                                 }
+                                const addAnEmployeeQ = `
+                                INSERT INTO employee (first_name,last_name,role_id,manager_id) 
+                                VALUES ("${data.employeeFirstName}","${data.employeeLastName}",${empR},${empM});
+                                `;
                                 //adds a new employee to the database
-                                db.query(`INSERT INTO employee (first_name,last_name,role_id,manager_id) VALUES ("${data.employeeFirstName}","${data.employeeLastName}",${empR},${empM});`, (err, results) => {
+                                db.query(addAnEmployeeQ, (err, results) => {
                                     if (err) {
                                         console.log('error:', err.message);
                                     } else {
@@ -94,7 +117,12 @@ function init() {
                 inquirer
                     .prompt(questions.updateEmployee)
                     .then((data) => {
-                        db.query("SELECT id, concat(employee.first_name, ' ' ,  employee.last_name) AS employee FROM employee;", function (err, results) {
+                        db.query(`
+                        SELECT 
+                            id, 
+                            concat(employee.first_name, ' ' ,  employee.last_name) AS employee 
+                        FROM employee;
+                        `, function (err, results) {
                             //Searches for the employee name that matches the answer given to get the employee id
                             let empId;
                             for (let u = 0; u < results.length; u++) {
@@ -127,7 +155,12 @@ function init() {
                 inquirer
                     .prompt(questions.updateEmployeeM)
                     .then((data) => {
-                        db.query("SELECT id, concat(employee.first_name, ' ' ,  employee.last_name) AS employee FROM employee;", function (err, results) {
+                        db.query(`
+                        SELECT 
+                            id, 
+                            concat(employee.first_name, ' ' ,  employee.last_name) AS employee 
+                        FROM employee;
+                        `, function (err, results) {
                             //Searches for the employee name that matches the answer given to get the employee id
                             let empIdM;
                             for (let u = 0; u < results.length; u++) {
@@ -146,7 +179,10 @@ function init() {
                                 }
                             }
                             //updates an employee's manager to the database
-                            db.query(`UPDATE employee SET manager_id = ${empMangUpdate} WHERE employee.id = ${empIdM};`, (err, results) => {
+                            db.query(`
+                            UPDATE employee 
+                            SET manager_id = ${empMangUpdate} 
+                            WHERE employee.id = ${empIdM};`, (err, results) => {
                                 if (err) {
                                     console.log('error:', err.message);
                                 } else {
@@ -159,7 +195,16 @@ function init() {
                     });
             } else if (data.choice === "View employees by manager") {
                 // Shows a table with all managers with their employees 
-                db.query("SELECT concat(manager.first_name, ' ' ,  manager.last_name) AS manager, GROUP_CONCAT(employee.first_name,' ',employee.last_name) AS employees FROM employee LEFT JOIN employee manager ON employee.manager_id = manager.id WHERE employee.manager_id!='NULL' GROUP BY manager;", function (err, results) {
+                db.query(`
+                SELECT 
+                    concat(manager.first_name, ' ' ,  manager.last_name) AS manager, 
+                    GROUP_CONCAT(employee.first_name,' ',employee.last_name) AS employees 
+                FROM employee 
+                    LEFT JOIN employee manager 
+                    ON employee.manager_id = manager.id 
+                WHERE employee.manager_id!='NULL' 
+                GROUP BY manager;
+                `, function (err, results) {
                     if (err) {
                         console.log('error:', err.message);
                     } else {
@@ -169,7 +214,17 @@ function init() {
                 });
             } else if (data.choice === "View employees by department") {
                 // Shows a table with all departments with their employees 
-                db.query("SELECT department.name AS department, GROUP_CONCAT(employee.first_name,' ',employee.last_name) AS employees FROM employee INNER JOIN role ON employee.role_id = role.id INNER JOIN department ON role.department_id = department.id GROUP BY department;", function (err, results) {
+                db.query(`
+                SELECT 
+                    department.name AS department, 
+                    GROUP_CONCAT(employee.first_name,' ',employee.last_name) AS employees 
+                FROM employee 
+                    INNER JOIN role 
+                    ON employee.role_id = role.id 
+                    INNER JOIN department 
+                    ON role.department_id = department.id 
+                GROUP BY department;
+                `, function (err, results) {
                     if (err) {
                         console.log('error:', err.message);
                     } else {
@@ -179,7 +234,15 @@ function init() {
                 });
             } else if (data.choice === "View all roles") {
                 // Shows a table with all roles and their department, and salary
-                db.query("SELECT role.title, department.name as department, role.salary FROM role JOIN department ON role.department_id = department.id;", function (err, results) {
+                db.query(`
+                SELECT 
+                    role.title, 
+                    department.name as department, 
+                    role.salary 
+                FROM role 
+                JOIN department 
+                    ON role.department_id = department.id;
+                `, function (err, results) {
                     if (err) {
                         console.log('error:', err.message);
                     } else {
@@ -200,7 +263,10 @@ function init() {
                                 }
                             }
                             //adds a new role to the database
-                            db.query(`INSERT INTO role (title,salary,department_id) VALUES ("${data.roleName}","${data.roleSalary}",${roleDept});`, (err, results) => {
+                            db.query(`
+                            INSERT INTO role (title,salary,department_id) 
+                            VALUES ("${data.roleName}","${data.roleSalary}",${roleDept});
+                            `, (err, results) => {
                                 if (err) {
                                     console.log('error:', err.message);
                                 } else {
@@ -246,7 +312,12 @@ function init() {
                 inquirer
                     .prompt(questions.deleteEmployee)
                     .then((data) => {
-                        db.query("SELECT id, concat(employee.first_name, ' ' ,  employee.last_name) AS employee FROM employee;", function (err, results) {
+                        db.query(`
+                        SELECT 
+                            id, 
+                            concat(employee.first_name, ' ' ,  employee.last_name) AS employee 
+                        FROM employee;
+                        `, function (err, results) {
                             //Searches for the employee name that matches the answer given to get the employee id
                             let empIdD;
                             for (let w = 0; w < results.length; w++) {
@@ -267,7 +338,15 @@ function init() {
                     })
             } else if (data.choice === "View the total utilized budget of each department") {
                 // Shows a table with each deparmtnets budget from the combined salaries of all employees in that department
-                db.query("SELECT department.name as department, SUM(role.salary) as budget FROM role RIGHT JOIN department ON role.department_id = department.id GROUP BY department.name;", function (err, results) {
+                db.query(`
+                SELECT 
+                    department.name as department, 
+                    SUM(role.salary) as budget 
+                FROM role 
+                    RIGHT JOIN department 
+                    ON role.department_id = department.id 
+                GROUP BY department.name;
+                `, function (err, results) {
                     if (err) {
                         console.log('error:', err.message);
                     } else {
