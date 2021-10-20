@@ -1,4 +1,5 @@
 const inquirer = require('inquirer');
+var figlet = require('figlet');
 const mysql = require('mysql2');
 require('dotenv').config();
 const questions = require('./questions');
@@ -363,5 +364,7 @@ function init() {
 }
 //initializes function init() once
 for (let i = 0; i < 1; i++) {
+    console.log(figlet.textSync('Employee'))
+    console.log(figlet.textSync('Manager'))
     init();
 }
