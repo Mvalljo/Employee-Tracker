@@ -22,7 +22,11 @@ function init() {
             if (data.choice === "View all departments") {
                 // Query database
                 db.query('SELECT department.name FROM department', function (err, results) {
-                    console.table(results);
+                    if (err) {
+                        console.log('error:', err.message);
+                    } else {
+                        console.table(results);
+                    }
                     init();
                 });
             } else if (data.choice === "Add a department") {
@@ -42,7 +46,11 @@ function init() {
             } else if (data.choice === "View all employees") {
                 // Query database
                 db.query("SELECT employee.first_name, employee.last_name, role.title, department.name AS department, role.salary, concat(manager.first_name, ' ' ,  manager.last_name) AS manager FROM employee LEFT JOIN employee manager ON employee.manager_id = manager.id INNER JOIN role ON employee.role_id = role.id INNER JOIN department ON role.department_id = department.id;", function (err, results) {
-                    console.table(results);
+                    if (err) {
+                        console.log('error:', err.message);
+                    } else {
+                        console.table(results);
+                    }
                     init();
                 });
             } else if (data.choice === "Add an employee") {
@@ -171,7 +179,11 @@ function init() {
             } else if (data.choice === "View all roles") {
                 // Query database
                 db.query("SELECT role.title, department.name as department, role.salary FROM role JOIN department ON role.department_id = department.id;", function (err, results) {
-                    console.table(results);
+                    if (err) {
+                        console.log('error:', err.message);
+                    } else {
+                        console.table(results);
+                    }
                     init();
                 });
             } else if (data.choice === "Add a role") {
