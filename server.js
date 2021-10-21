@@ -293,7 +293,7 @@ function init() {
                     .prompt(questions.deleteDepartment)
                     .then((data) => {
                         //Deleted a department from database
-                        db.query(`DELETE FROM department WHERE name = "?";`, data.deletedDept, (err, results) => {
+                        db.query(`DELETE FROM department WHERE name = "${data.deletedDept}";`, (err, results) => {
                             if (err) {
                                 console.log('error:', err.message);
                             } else {
