@@ -89,7 +89,6 @@ function init() {
                                 id, 
                                 concat(employee.first_name, ' ' ,  employee.last_name) AS employee 
                             FROM employee;`, function (err, results) {
-                                console.log(results);
                                 //Searches for the manager name that matches the answer given to get the manager id
                                 let empM;
                                 for (let m = 0; m < results.length; m++) {
