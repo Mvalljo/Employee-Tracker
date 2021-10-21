@@ -16,7 +16,7 @@ Note: User has to rename the .env.EXAMPLE file to .env and fill out their sql pa
 ## Usage
 After invoking applicaiton user is then presented with options on what they want to do wheter its view or manage the departments, roles, and employees in the company.
 
-Walkthorugh of application = https://youtu.be/fHUsjcb6kVA
+Walkthrough of application = https://youtu.be/fHUsjcb6kVA
 ## License
 This appplication is covered under the MIT License.
 ## Contribution
