@@ -110,7 +110,6 @@ function init() {
                                         console.log("Added " + data.employeeFirstName + " " + data.employeeLastName + " to the database.");
                                         //Adds a new employee to the list of all employees that the questions uses
                                         questions.emplNames.push(data.employeeFirstName + " " + data.employeeLastName);
-                                        console.log(questions.emplNames);
                                         //If no manager is chosen for the new employee then add to the list of all managers that the quesitons uses
                                         if (data.employeeManager === "None") {
                                             questions.emplMang.push(data.employeeFirstName + " " + data.employeeLastName)
