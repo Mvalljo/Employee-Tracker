@@ -1,7 +1,7 @@
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://spdx.org/licenses/MIT.html)
 # Employee Tracker
 ## Description
-Build a command-line application to manage a company's employee database
+Build a command-line application to manage a company's employee database.
 ## Table of Contents
 - [Installation](#installation)
 - [Usage](#usage)
@@ -16,7 +16,7 @@ Note: User has to rename the .env.EXAMPLE file to .env and fill out their sql pa
 ## Usage
 After invoking applicaiton user is then presented with options on what they want to do wheter its view or manage the departments, roles, and employees in the company.
 
-Walkthorugh of application = 
+Walkthorugh of application = https://github.com/Mvalljo/Employee-Tracker
 ## License
 This appplication is covered under the MIT License.
 ## Contribution
