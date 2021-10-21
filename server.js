@@ -40,6 +40,8 @@ function init() {
                                 console.log('error:', err.message);
                             } else {
                                 console.log("Added " + data.departmentName + " to the database.");
+                                ////Adds a new department to the list of all departments that the questions uses
+                                questions.dept.push(data.departmentName);
                             }
                             init();
                             return results;
@@ -107,6 +109,13 @@ function init() {
                                         console.log('error:', err.message);
                                     } else {
                                         console.log("Added " + data.employeeFirstName + " " + data.employeeLastName + " to the database.");
+                                        //Adds a new employee to the list of all employees that the questions uses
+                                        questions.emplNames.push(data.employeeFirstName + " " + data.employeeLastName);
+                                        console.log(questions.emplNames);
+                                        //If no manager is chosen for the new employee then add to the list of all managers that the quesitons uses
+                                        if (data.employeeManager === "None") {
+                                            questions.emplMang.push(data.employeeFirstName + " " + data.employeeLastName)
+                                        }
                                     }
                                     init();
                                     return results;
@@ -272,6 +281,8 @@ function init() {
                                     console.log('error:', err.message);
                                 } else {
                                     console.log("Added " + data.roleName + " to the database.");
+                                    //Adds a new role to the list of all roles that the questions uses
+                                    questions.emplRole.push(data.roleName);
                                 }
                                 init();
                                 return results;

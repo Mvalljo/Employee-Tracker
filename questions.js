@@ -186,8 +186,12 @@ const deleteEmployee = [
 
 exports.starterQ = starterQ;
 exports.addDepartmentQ = addDepartmentQ;
+exports.dept = dept; 
 exports.addEmployeeQ = addEmployeeQ;
+exports.emplNames = emplNames;
+exports.emplMang = emplMang;
 exports.addRoleQ = addRoleQ;
+exports.emplRole = emplRole;
 exports.updateEmployee = updateEmployee;
 exports.updateEmployeeM = updateEmployeeM;
 exports.deleteDepartment = deleteDepartment;
