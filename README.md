@@ -12,7 +12,7 @@ Build a command-line application to manage a company's employee database
 ## Installation
 Clone the code then invoke the application by running node server.js in the command line after downloading the packages needed by running npm i. 
 
-Note: User has to delete the .Example in the .env.Example and fill out their sql password. If sql username is different then user can change the username in the server file on line 12.
+Note: User has to rename the .env.EXAMPLE file to .env and fill out their sql password. If sql username is different then user can change the username in the server file on line 12.
 ## Usage
 After invoking applicaiton user is then presented with options on what they want to do wheter its view or manage the departments, roles, and employees in the company.
 
