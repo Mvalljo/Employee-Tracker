@@ -308,7 +308,7 @@ function init() {
                     .prompt(questions.deleteRole)
                     .then((data) => {
                         //Deleted a role from database
-                        db.query(`DELETE FROM role WHERE title = "?";`, data.deletedRole, (err, results) => {
+                        db.query(`DELETE FROM role WHERE title = "${data.deletedRole}";`, (err, results) => {
                             if (err) {
                                 console.log('error:', err.message);
                             } else {
